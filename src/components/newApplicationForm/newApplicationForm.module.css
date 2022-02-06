@@ -1,0 +1,81 @@
+.newApplicationContainer {
+    filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.25));
+    background-color: #ecf3f7;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 975px;
+    padding-top: 65px;
+}
+
+.header {
+    width: 100%;
+    filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.25));
+    background-color: #1a4876;
+    padding: 20px 35px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 55px;
+}
+
+.title {
+    font-size: 18px;
+    letter-spacing: 0px;
+    line-height: 20px;
+    color: #ffffff;
+    font-family: "Myriad Pro", sans-serif;
+}
+
+.btnClose {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.content {
+    padding-left: 35px;
+
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.textAreaBox {
+    display: flex;
+    flex-direction: column;
+}
+
+.textAreaBox:first-child {
+    margin-bottom: 22px;
+}
+
+.subtitle {
+    font-size: 14px;
+    line-height: 24px;
+    color: #9f9ea7;
+    font-weight: 300;
+    font-family: "Ubuntu", sans-serif;
+    margin-bottom: 13px;
+}
+
+.textarea {
+    width: 623px;
+    resize: none;
+}
+
+.textareaName {
+    height: 83px;
+}
+
+.textareaDescription {
+    height: 132px;
+}
+
+.btnSubmit {
+    margin-top: 74px;
+
+}

@@ -13,7 +13,6 @@ const ApplicationPageContainer = (): ReactElement => {
   useEffect(() => {
     dispatch(getApplicationsTC());
   }, [dispatch]);
-  console.log(applications);
   return <ApplicationPage applications={applications} />;
 };
 

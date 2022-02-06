@@ -73,7 +73,6 @@ export const getApplicationsTC = () => (dispatch: Dispatch) => {
   applicationsAPI
     .getApplications()
     .then(res => {
-      // console.log(res.data.value);
       console.log(res.data.value);
       dispatch(getApplicationsAC(res.data.value));
     })

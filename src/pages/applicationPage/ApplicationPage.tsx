@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import s from './applicationPage.module.css';
 import { ApplicationType } from '../../redux/applications-reducer';
+import NewApplicationFormContainer from '../../components/newApplicationForm/NewApplicationFormContainer';
 
 type PropsType = {
   applications: ApplicationType[];
@@ -8,7 +9,9 @@ type PropsType = {
 
 const ApplicationPage = ({ applications }: PropsType): ReactElement => (
   <div className={s.applicationsContainer}>
-    <div>Applications</div>
+    <button className={`${s.createButton} btn`} type="button">
+      Создать заявку
+    </button>
     <ul className={s.tableList}>
       <li className={s.tableListItem}>
         <div className={`${s.itemID} ${s.listHeader}`}>ID</div>
@@ -19,13 +22,31 @@ const ApplicationPage = ({ applications }: PropsType): ReactElement => (
       {applications &&
         applications.map(item => (
           <li className={s.tableListItem} key={item.id}>
-            <div className={`${s.itemID} ${s.listItem}`}>{item.id}</div>
-            <div className={`${s.itemName} ${s.listItem}`}>{item.name}</div>
-            <div className={`${s.itemStatus} ${s.listItem}`}>{item.statusName}</div>
+            <div className={`${s.itemID} ${s.listItem}`}>
+              {item.taskTypeId}
+              <span
+                className={s.colorStatus}
+                style={{ backgroundColor: item.statusRgb }}
+              />
+            </div>
+            <div className={`${s.itemName} ${s.listItem}`}>
+              <p className={s.applicationText}>{item.name}</p>
+            </div>
+            <div className={`${s.itemStatus} ${s.listItem}`}>
+              <span
+                className={s.statusText}
+                style={{
+                  backgroundColor: item.statusRgb,
+                }}
+              >
+                {item.statusName}
+              </span>
+            </div>
             <div className={`${s.itemExecutor} ${s.listItem}`}>{item.executorName}</div>
           </li>
         ))}
     </ul>
+    <NewApplicationFormContainer />
   </div>
 );
 
