@@ -47,6 +47,7 @@
 .textAreaBox {
     display: flex;
     flex-direction: column;
+
 }
 
 .textAreaBox:first-child {
@@ -65,6 +66,8 @@
 .textarea {
     width: 623px;
     resize: none;
+    padding-top: 10px;
+    padding-left: 10px;
 }
 
 .textareaName {

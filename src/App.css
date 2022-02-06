@@ -15,11 +15,12 @@ ul {
 }
 
 
-
-.App{
+.App {
     position: relative;
 }
-.btn{
+
+
+.btn {
     width: 180px;
     height: 40px;
     border-radius: 20px;

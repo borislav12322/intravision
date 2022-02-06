@@ -5,11 +5,21 @@ import NewApplicationFormContainer from '../../components/newApplicationForm/New
 
 type PropsType = {
   applications: ApplicationType[];
+  isAddFormVisible: boolean;
+  openAddNewApplicationForm: () => void;
 };
 
-const ApplicationPage = ({ applications }: PropsType): ReactElement => (
+const ApplicationPage = ({
+  applications,
+  isAddFormVisible,
+  openAddNewApplicationForm,
+}: PropsType): ReactElement => (
   <div className={s.applicationsContainer}>
-    <button className={`${s.createButton} btn`} type="button">
+    <button
+      className={`${s.createButton} btn`}
+      type="button"
+      onClick={openAddNewApplicationForm}
+    >
       Создать заявку
     </button>
     <ul className={s.tableList}>
@@ -23,7 +33,7 @@ const ApplicationPage = ({ applications }: PropsType): ReactElement => (
         applications.map(item => (
           <li className={s.tableListItem} key={item.id}>
             <div className={`${s.itemID} ${s.listItem}`}>
-              {item.taskTypeId}
+              {item.id}
               <span
                 className={s.colorStatus}
                 style={{ backgroundColor: item.statusRgb }}
@@ -46,7 +56,7 @@ const ApplicationPage = ({ applications }: PropsType): ReactElement => (
           </li>
         ))}
     </ul>
-    <NewApplicationFormContainer />
+    {isAddFormVisible && <NewApplicationFormContainer />}
   </div>
 );
 

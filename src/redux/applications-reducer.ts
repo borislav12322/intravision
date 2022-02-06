@@ -1,7 +1,11 @@
 import { Dispatch } from 'redux';
-import { applicationsAPI } from '../DAL/applicationsAPI';
+import { applicationsAPI, NewApplicationDataType } from '../DAL/applicationsAPI';
 
-export type ActionsTypes = GetApplicationsACType;
+export type ActionsTypes =
+  | GetApplicationsACType
+  | SetAddNewApplicationVisibleACType
+  | SetNewApplicationNameACType
+  | SetNewApplicationDescriptionACType;
 
 export type ApplicationType = {
   id: number;
@@ -31,19 +35,21 @@ export type ApplicationType = {
       id: number;
       name: string;
     },
-    {
-      id: number;
-      name: string;
-    },
   ];
 };
 
 export type InitialStateType = {
   applications: ApplicationType[];
+  isAddNewApplicationFormVisible: boolean;
+  newApplicationName: string;
+  newApplicationDescription: string;
 };
 
 const initialState: InitialStateType = {
   applications: [],
+  isAddNewApplicationFormVisible: false,
+  newApplicationName: '',
+  newApplicationDescription: '',
 };
 
 export const applicationsReducer = (
@@ -54,7 +60,22 @@ export const applicationsReducer = (
     case 'GET-APPLICATION':
       return {
         ...state,
-        applications: [...action.applications],
+        applications: [...action.applications].reverse(),
+      };
+    case 'SET-APPLICATION-VISIBLE':
+      return {
+        ...state,
+        isAddNewApplicationFormVisible: action.isVisible,
+      };
+    case 'SET-NEW-APPLICATION-NAME':
+      return {
+        ...state,
+        newApplicationName: action.name,
+      };
+    case 'SET-NEW-APPLICATION-DESCRIPTION':
+      return {
+        ...state,
+        newApplicationDescription: action.description,
       };
     default:
       return state;
@@ -69,14 +90,54 @@ export const getApplicationsAC = (applications: ApplicationType[]) =>
     applications,
   } as const);
 
+export type SetAddNewApplicationVisibleACType = ReturnType<
+  typeof setAddNewApplicationVisibleAC
+>;
+
+export const setAddNewApplicationVisibleAC = (isVisible: boolean) =>
+  ({
+    type: 'SET-APPLICATION-VISIBLE',
+    isVisible,
+  } as const);
+
+export type SetNewApplicationNameACType = ReturnType<typeof setNewApplicationNameAC>;
+
+export const setNewApplicationNameAC = (name: string) =>
+  ({
+    type: 'SET-NEW-APPLICATION-NAME',
+    name,
+  } as const);
+
+export type SetNewApplicationDescriptionACType = ReturnType<
+  typeof setNewApplicationDescriptionAC
+>;
+
+export const setNewApplicationDescriptionAC = (description: string) =>
+  ({
+    type: 'SET-NEW-APPLICATION-DESCRIPTION',
+    description,
+  } as const);
+
 export const getApplicationsTC = () => (dispatch: Dispatch) => {
   applicationsAPI
     .getApplications()
     .then(res => {
-      console.log(res.data.value);
+      console.log(res.data);
       dispatch(getApplicationsAC(res.data.value));
     })
     .catch(err => {
       console.log(err);
     });
 };
+
+export const addNewApplicationTC =
+  (newApplicationData: NewApplicationDataType) => (dispatch: Dispatch) => {
+    applicationsAPI
+      .createNewApplication(newApplicationData)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
