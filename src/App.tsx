@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { ReactElement, useEffect } from 'react';
 import './App.css';
+import Sidebar from './components/sidebar/Sidebar';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import TestPage from './pages/testPage/TestPage';
+import ApplicationPageContainer from './pages/applicationPage/ApplicationPageContainer';
+import InputSearchContainer from './components/inputSearch/InputSearchContainer';
 
-function App() {
-  return (
+const App = (): ReactElement => (
+  <BrowserRouter>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Sidebar />
+      <InputSearchContainer />
+      <div className="mainContent">
+        <Routes>
+          <Route path="/dataBase" element={<TestPage />} />
+          <Route path="/applications" element={<ApplicationPageContainer />} />
+          <Route path="/employers" element={<TestPage />} />
+          <Route path="/clients" element={<TestPage />} />
+          <Route path="/actives" element={<TestPage />} />
+          <Route path="/settings" element={<TestPage />} />
+        </Routes>
+      </div>
     </div>
-  );
-}
+  </BrowserRouter>
+);
 
 export default App;

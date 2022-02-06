@@ -1,0 +1,41 @@
+.inputSearchContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #d1e0ed;
+    filter: drop-shadow(0 0 3.5px rgba(0, 0, 0, 0.2));
+    width: 100%;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    padding-left: 115px;
+
+}
+
+.inputSearchWrapper {
+    position: relative;
+}
+
+.input {
+    width: 680px;
+    height: 40px;
+    border-radius: 20px;
+    filter: drop-shadow(0 0 3.5px rgba(0, 140, 240, 0.15));
+    background-color: #ffffff;
+    border: 1px solid #42aaff;
+    padding-left: 20px;
+    font-family: Roboto, sans-serif;
+    position: relative;
+}
+
+
+.icon {
+    position: absolute;
+    z-index: 2;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    width: 15px;
+    height: 15px;
+}

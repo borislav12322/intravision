@@ -1,0 +1,23 @@
+.applicationsContainer{
+    padding-top: 100px;
+    padding-left: 100px;
+}
+.tableList{
+    display: flex;
+    flex-direction: column;
+}
+.tableListItem{
+    display: flex;
+}
+.itemID{
+    width: 100px;
+}
+.itemName{
+    width: 200px;
+}
+.itemStatus{
+    width: 200px;
+}
+.itemExecutor{
+    width: 200px;
+}
