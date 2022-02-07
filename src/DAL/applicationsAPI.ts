@@ -15,6 +15,8 @@ export const applicationsAPI = {
       'api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks',
       newApplicationData,
     ),
+  getApplicationInfo: (id: string) =>
+    axiosInstance.get(`/api/{7bd558ea-771d-4b99-a2d3-55151d5388ac}/Tasks/${id}`),
 };
 
 export type ApplicationResponseType = {

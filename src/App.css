@@ -32,3 +32,32 @@ ul {
     font-family: "Ubuntu", sans-serif;
     cursor: pointer;
 }
+
+
+.header {
+    width: 100%;
+    filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.25));
+    background-color: #1a4876;
+    padding: 20px 35px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 55px;
+}
+
+.applicationFormContainer{
+    filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.25));
+    background-color: #ecf3f7;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 975px;
+    padding-top: 65px;
+    height: 100%;
+}
+
+.btnClose {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}

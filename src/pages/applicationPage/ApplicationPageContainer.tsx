@@ -3,6 +3,7 @@ import ApplicationPage from './ApplicationPage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApplicationType,
+  getApplicationInfoTC,
   getApplicationsTC,
   setAddNewApplicationVisibleAC,
 } from '../../redux/applications-reducer';
@@ -19,6 +20,9 @@ const ApplicationPageContainer = (): ReactElement => {
   const openAddNewApplicationForm = (): void => {
     dispatch(setAddNewApplicationVisibleAC(true));
   };
+  const openApplicationEditInfo = (id: string): void => {
+    dispatch(getApplicationInfoTC(id));
+  };
 
   useEffect(() => {
     dispatch(getApplicationsTC());
@@ -28,6 +32,7 @@ const ApplicationPageContainer = (): ReactElement => {
       applications={applications}
       isAddFormVisible={isAddFormVisible}
       openAddNewApplicationForm={openAddNewApplicationForm}
+      openApplicationEditInfo={openApplicationEditInfo}
     />
   );
 };

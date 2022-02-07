@@ -5,7 +5,8 @@ export type ActionsTypes =
   | GetApplicationsACType
   | SetAddNewApplicationVisibleACType
   | SetNewApplicationNameACType
-  | SetNewApplicationDescriptionACType;
+  | SetNewApplicationDescriptionACType
+  | GetApplicationInfoACType;
 
 export type ApplicationType = {
   id: number;
@@ -38,11 +39,55 @@ export type ApplicationType = {
   ];
 };
 
+export type ApplicationInfoType = {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  price: number;
+  taskTypeId: number;
+  taskTypeName: string;
+  statusId: number;
+  statusName: string;
+  statusRgb: string;
+  priorityId: number;
+  priorityName: string;
+  serviceId: number;
+  serviceName: string;
+  resolutionDatePlan: string;
+  tags: [
+    {
+      id: number;
+      name: string;
+    },
+  ];
+  initiatorId: number;
+  initiatorName: string;
+  executorId: number;
+  executorName: string;
+  executorGroupId: number;
+  executorGroupName: string;
+  lifetimeItems: [
+    {
+      id: number;
+      userName: string;
+      lifetimeType: number;
+      createdAt: string;
+      comment: string;
+      fieldName: null | string;
+      oldFieldValue: null | string;
+      newFieldValue: null | string;
+    },
+  ];
+};
+
 export type InitialStateType = {
   applications: ApplicationType[];
   isAddNewApplicationFormVisible: boolean;
   newApplicationName: string;
   newApplicationDescription: string;
+  applicationInfo: ApplicationInfoType | null;
 };
 
 const initialState: InitialStateType = {
@@ -50,6 +95,7 @@ const initialState: InitialStateType = {
   isAddNewApplicationFormVisible: false,
   newApplicationName: '',
   newApplicationDescription: '',
+  applicationInfo: null,
 };
 
 export const applicationsReducer = (
@@ -76,6 +122,11 @@ export const applicationsReducer = (
       return {
         ...state,
         newApplicationDescription: action.description,
+      };
+    case 'GET-NEW-APPLICATION-INFO':
+      return {
+        ...state,
+        applicationInfo: action.info,
       };
     default:
       return state;
@@ -118,11 +169,20 @@ export const setNewApplicationDescriptionAC = (description: string) =>
     description,
   } as const);
 
+export type GetApplicationInfoACType = ReturnType<typeof getApplicationInfoAC>;
+
+export const getApplicationInfoAC = (info: ApplicationInfoType) =>
+  ({
+    type: 'GET-NEW-APPLICATION-INFO',
+    info,
+  } as const);
+
 export const getApplicationsTC = () => (dispatch: Dispatch) => {
   applicationsAPI
     .getApplications()
     .then(res => {
       console.log(res.data);
+      console.log(res);
       dispatch(getApplicationsAC(res.data.value));
     })
     .catch(err => {
@@ -141,3 +201,15 @@ export const addNewApplicationTC =
         console.log(err);
       });
   };
+
+export const getApplicationInfoTC = (id: string) => (dispatch: Dispatch) => {
+  applicationsAPI
+    .getApplicationInfo(id)
+    .then(res => {
+      console.log(res.data);
+      dispatch(getApplicationInfoAC(res.data));
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};

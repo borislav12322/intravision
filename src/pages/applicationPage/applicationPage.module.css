@@ -7,7 +7,6 @@
 .createButton {
     margin-bottom: 30px;
     margin-left: 100px;
-
 }
 
 .tableList {
@@ -42,6 +41,15 @@
     border-radius: 1px;
     filter: drop-shadow(0 0 5px rgba(94, 96, 109, 0.2));
     padding: 17px 0 17px 35px;
+    transition: all .3s ease;
+}
+
+.tableListItem:not(:first-child):hover{
+    background-color: rgba(0, 140, 240, 0.25);
+    transition: all .3s ease;
+}
+.tableListItem:not(:first-child){
+    cursor: pointer;
 }
 
 .listItem {

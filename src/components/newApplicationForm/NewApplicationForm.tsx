@@ -19,10 +19,10 @@ const NewApplicationForm = ({
   newApplicationName,
   newApplicationDescription,
 }: PropsType): ReactElement => (
-  <div className={s.newApplicationContainer}>
-    <div className={s.header}>
+  <div className="applicationFormContainer">
+    <div className="header">
       <h2 className={s.title}>Новая заявка</h2>
-      <button className={s.btnClose} type="button" onClick={closeAddNewApplicationForm}>
+      <button className="btnClose" type="button" onClick={closeAddNewApplicationForm}>
         <img className={s.icon} src={CloseIcon} alt="close" />
       </button>
     </div>
