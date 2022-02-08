@@ -22,6 +22,17 @@ const EditApplicationContainer = (): ReactElement => {
     InitialStateType
   >(state => state.applicationsReducer);
 
+  const createdAtDateTime = new Date(applicationInfo.createdAt);
+  const createdAt = createdAtDateTime.toLocaleDateString('ru');
+  const resolutionDatePlan = new Date(applicationInfo.resolutionDatePlan);
+  const resolutionDatePlanValue = `${resolutionDatePlan.toLocaleDateString('ru')} г.`;
+  console.log(resolutionDatePlanValue);
+  const commentDateTime = applicationInfo.lifetimeItems.map(
+    item => new Date(item.createdAt),
+  );
+
+  console.log(commentDateTime);
+
   const changeStatusListVisible = useCallback(
     (isVisible: boolean): void => {
       setStatusListVisible(isVisible);
@@ -94,6 +105,8 @@ const EditApplicationContainer = (): ReactElement => {
       addComment={addComment}
       commentText={commentText}
       isLoading={isLoading}
+      createdAt={createdAt}
+      resolutionDatePlanValue={resolutionDatePlanValue}
     />
   );
 };

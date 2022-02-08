@@ -40,6 +40,8 @@ type PropsType = {
     executorId: number | null,
   ) => void;
   commentText: string;
+  createdAt: string;
+  resolutionDatePlanValue: string;
 };
 
 const EditApplication = React.memo(
@@ -58,6 +60,8 @@ const EditApplication = React.memo(
     addComment,
     commentText,
     isLoading,
+    createdAt,
+    resolutionDatePlanValue,
   }: PropsType): ReactElement => (
     <div className="applicationFormContainer">
       {isLoading && <LoadingComponent />}
@@ -109,7 +113,15 @@ const EditApplication = React.memo(
                 <img src={CommentCircle} className={s.commentCircle} alt="circle" />
                 <div className={s.commentMainContent}>
                   <h4 className={s.nameTitle}>{item.userName}</h4>
-                  <span className={s.dateInfo}>{item.createdAt}</span>
+                  <div className={s.commentDateBox}>
+                    <span className={s.dateInfo} style={{ marginRight: '5px' }}>
+                      {new Date(item.createdAt).toLocaleDateString('ru')},
+                    </span>
+                    <span className={s.dateInfo} style={{ marginRight: '5px' }}>
+                      {new Date(item.createdAt).toLocaleTimeString('ru')}
+                    </span>
+                    <span className={s.dateInfo}>прокомментировал</span>
+                  </div>
                   <p className={s.commentDescription}>{item.comment}</p>
                 </div>
               </div>
@@ -176,9 +188,7 @@ const EditApplication = React.memo(
           </div>
           <div className={`${s.executorInfoContent} ${s.executorInfoStyle}`}>
             <h5 className={s.executorInfoTitle}>Создана</h5>
-            <span className={s.executorText}>
-              {applicationInfo && applicationInfo.createdAt}
-            </span>
+            <span className={s.executorText}>{createdAt}</span>
           </div>
           <div
             className={`${s.executorInfoContent} ${s.executorInfoStyle} ${s.editableElement}`}
@@ -225,10 +235,10 @@ const EditApplication = React.memo(
               {applicationInfo && applicationInfo.priorityName}
             </span>
           </div>
-          <div className={`${s.executorInfoContent} ${s.executorInfoStyle}`}>
+          <div className={`${s.executorInfoContent} ${s.executorInfoStyle} ${s.dateBox}`}>
             <h5 className={s.executorInfoTitle}>Срок</h5>
-            <span className={s.executorText}>
-              {applicationInfo && applicationInfo.resolutionDatePlan}
+            <span className={`${s.executorText} ${s.dateText}`}>
+              {resolutionDatePlanValue}
             </span>
           </div>
           <div className={`${s.executorInfoContent} ${s.executorInfoStyle}`}>

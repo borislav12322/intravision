@@ -273,4 +273,23 @@
     transition: all .4s ease;
 }
 
+.dateText{
+    position: relative;
+    padding-left: 25px;
+}
+.dateText::after{
+    position: absolute;
+    left: 0;
+    content: '';
+    background-image: url('../../assets/images/calendatIcon.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
+
+.commentDateBox{
+    display: flex;
+}
+
 
