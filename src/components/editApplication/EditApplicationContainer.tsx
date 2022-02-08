@@ -16,9 +16,8 @@ const EditApplicationContainer = (): ReactElement => {
   const [isExecutorListVisible, setExecutorListVisible] = useState<boolean>(false);
   const [commentText, setCommentText] = useState<string>('');
   const dispatch = useDispatch();
-  const zeroLength = 0;
 
-  const { applicationInfo, statuses, executors } = useSelector<
+  const { applicationInfo, statuses, executors, isLoading } = useSelector<
     AppRootStateType,
     InitialStateType
   >(state => state.applicationsReducer);
@@ -47,12 +46,10 @@ const EditApplicationContainer = (): ReactElement => {
   );
   const addComment = useCallback(
     (id: number | null, statusId: number | null, executorId: number | null): void => {
-      if (commentText.length !== zeroLength) {
-        dispatch(addCommentTC(id, statusId, executorId, commentText));
-        setCommentText('');
-      }
+      dispatch(addCommentTC(id, statusId, executorId, commentText));
+      setCommentText('');
     },
-    [dispatch],
+    [dispatch, commentText],
   );
   const changeStatus = useCallback(
     (
@@ -96,6 +93,7 @@ const EditApplicationContainer = (): ReactElement => {
       commentAreaHandle={commentAreaHandle}
       addComment={addComment}
       commentText={commentText}
+      isLoading={isLoading}
     />
   );
 };

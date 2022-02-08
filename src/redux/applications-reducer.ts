@@ -16,7 +16,8 @@ export type ActionsTypes =
   | ChangeExecutorACType
   | ChangeExecutorEditPageACType
   | SetEditApplicationVisibleACType
-  | ChangeActiveItemACType;
+  | ChangeActiveItemACType
+  | SetIsLoadingACType;
 
 export type ApplicationType = {
   id: number;
@@ -112,6 +113,7 @@ export type InitialStateType = {
   applicationInfo: ApplicationInfoType;
   statuses: StatusesType[];
   executors: ExecutorsType[];
+  isLoading: boolean;
 };
 
 const initialState: InitialStateType = {
@@ -164,6 +166,7 @@ const initialState: InitialStateType = {
   },
   statuses: [],
   executors: [],
+  isLoading: false,
 };
 
 export const applicationsReducer = (
@@ -263,7 +266,11 @@ export const applicationsReducer = (
           ),
         ],
       };
-
+    case 'SET-IS-LOADING':
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
     default:
       return state;
   }
@@ -408,28 +415,33 @@ export const changeExecutorEditPageAC = (executor: string | null, id: number | n
     id,
   } as const);
 
+export type SetIsLoadingACType = ReturnType<typeof setIsLoadingAC>;
+
+export const setIsLoadingAC = (isLoading: boolean) =>
+  ({
+    type: 'SET-IS-LOADING',
+    isLoading,
+  } as const);
+
 export const getApplicationsTC = () => (dispatch: Dispatch) => {
   applicationsAPI
     .getApplications()
     .then(res => {
-      console.log(res.data);
-      console.log(res);
       dispatch(getApplicationsAC(res.data.value));
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => {});
 };
 
 export const getApplicationInfoTC = (id: string) => (dispatch: Dispatch) => {
+  dispatch(setIsLoadingAC(true));
   applicationsAPI
     .getApplicationInfo(id)
     .then(res => {
-      console.log(res.data);
       dispatch(getApplicationInfoAC(res.data));
     })
-    .catch(err => {
-      console.log(err);
+    .catch(err => {})
+    .finally(() => {
+      dispatch(setIsLoadingAC(false));
     });
 };
 
@@ -439,21 +451,17 @@ export const addNewApplicationTC =
     applicationsAPI
       .createNewApplication(newApplicationData)
       .then(res => {
-        console.log(res);
         dispatch(getApplicationInfoTC(res.data.toString()));
         dispatch(setAddNewApplicationVisibleAC(false));
         dispatch(setEditApplicationVisibleAC(true));
         dispatch(getApplicationsTC());
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => {});
   };
 
 export const getStatusesTC = () => (dispatch: Dispatch) => {
   applicationsAPI.getStatuses().then(res => {
     dispatch(getStatusAC(res.data));
-    console.log(res.data);
   });
 };
 
@@ -469,25 +477,19 @@ export const changeApplicationStatusTC =
     applicationsAPI
       .updateApplicationInfo(id, statusId, executorId)
       .then(res => {
-        console.log(res);
         dispatch(setStatusAC(statusId, statusColor, statusName, id, executorId));
         dispatch(updateApplicationColorStatusAC(statusColor, id, statusName));
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => {});
   };
 
 export const getExecutorsTC = () => (dispatch: Dispatch) => {
   applicationsAPI
     .getExecutors()
     .then(res => {
-      console.log(res.data);
       dispatch(getExecutorsAC(res.data));
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => {});
 };
 
 export const changeExecutorTC =
@@ -501,7 +503,6 @@ export const changeExecutorTC =
     applicationsAPI.updateApplicationInfo(id, statusId, executorId).then(res => {
       dispatch(changeExecutorAC(executorName, id));
       dispatch(changeExecutorEditPageAC(executorName, id));
-      console.log(res);
     });
   };
 
@@ -519,9 +520,6 @@ export const addCommentTC =
         if (id) {
           dispatch(getApplicationInfoTC(id.toString()));
         }
-        console.log(res);
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(err => {});
   };

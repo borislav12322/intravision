@@ -8,6 +8,11 @@ import EmployersLogo from '../../assets/images/employersLogo.png';
 import Clients from '../../assets/images/clientsLogo.png';
 import ActivesLogo from '../../assets/images/activesLogo.png';
 import SettingsLogo from '../../assets/images/settingsLogo.png';
+import { useDispatch } from 'react-redux';
+import {
+  setAddNewApplicationVisibleAC,
+  setEditApplicationVisibleAC,
+} from '../../redux/applications-reducer';
 
 type NavLinkType = {
   id: string;
@@ -25,6 +30,7 @@ const Sidebar = (): ReactElement => {
     { id: '5', icon: ActivesLogo, text: 'Активы', navLink: '/actives' },
     { id: '6', icon: SettingsLogo, text: 'Настройки', navLink: '/settings' },
   ];
+  const dispatch = useDispatch();
 
   return (
     <header className={s.sidebarContainer}>
@@ -34,6 +40,12 @@ const Sidebar = (): ReactElement => {
           {navLinksArray.map((item, i) => (
             <li className={s.sideBarItem} key={item.id}>
               <NavLink
+                onClick={() => {
+                  if (item.id === '2') {
+                    dispatch(setAddNewApplicationVisibleAC(false));
+                    dispatch(setEditApplicationVisibleAC(false));
+                  }
+                }}
                 className={s.navLink}
                 to={item.navLink}
                 style={({ isActive }) => ({

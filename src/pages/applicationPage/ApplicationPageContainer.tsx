@@ -28,6 +28,7 @@ const ApplicationPageContainer = (): ReactElement => {
   const openAddNewApplicationForm = useCallback((): void => {
     dispatch(setAddNewApplicationVisibleAC(true));
     dispatch(setEditApplicationVisibleAC(false));
+    dispatch(getApplicationsTC());
   }, [dispatch]);
   const openApplicationEditInfo = useCallback(
     (id: string): void => {

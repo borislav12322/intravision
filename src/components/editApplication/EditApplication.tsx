@@ -8,6 +8,7 @@ import {
   ExecutorsType,
   StatusesType,
 } from '../../redux/applications-reducer';
+import LoadingComponent from '../loadingComponent/LoadingComponent';
 
 type PropsType = {
   applicationInfo: ApplicationInfoType | null;
@@ -18,6 +19,7 @@ type PropsType = {
   commentAreaHandle: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   closeEditForm: () => void;
   isStatusListVisible: boolean;
+  isLoading: boolean;
   isExecutorListVisible: boolean;
   changeStatus: (
     newStatusID: number,
@@ -55,8 +57,10 @@ const EditApplication = React.memo(
     commentAreaHandle,
     addComment,
     commentText,
+    isLoading,
   }: PropsType): ReactElement => (
     <div className="applicationFormContainer">
+      {isLoading && <LoadingComponent />}
       <div className="header" style={{ marginBottom: '0px' }}>
         <div className={s.textContent}>
           <span className={s.id}>№ {applicationInfo && applicationInfo.id}</span>
