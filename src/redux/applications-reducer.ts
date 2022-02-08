@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import { applicationsAPI, NewApplicationDataType } from '../DAL/applicationsAPI';
+import { ThunkDispatch } from 'redux-thunk';
 
 export type ActionsTypes =
   | GetApplicationsACType
@@ -11,8 +12,10 @@ export type ActionsTypes =
   | GetStatusACType
   | SetStatusACType
   | UpdateApplicationColorStatusACType
-  | UpdateExecutorACType
-  | GetExecutorsACType;
+  | GetExecutorsACType
+  | ChangeExecutorACType
+  | ChangeExecutorEditPageACType
+  | SetEditApplicationVisibleACType;
 
 export type ApplicationType = {
   id: number;
@@ -24,8 +27,8 @@ export type ApplicationType = {
   taskTypeId: number;
   taskTypeName: string;
   statusId: number;
-  statusName: string;
-  statusRgb: string;
+  statusName: string | null;
+  statusRgb: string | undefined;
   priorityId: number;
   priorityName: string;
   serviceId: number;
@@ -34,7 +37,7 @@ export type ApplicationType = {
   initiatorId: number;
   initiatorName: string;
   executorId: number;
-  executorName: string;
+  executorName: string | null;
   executorGroupId: number;
   executorGroupName: string;
   tags: [
@@ -55,8 +58,8 @@ export type ApplicationInfoType = {
   taskTypeId: number;
   taskTypeName: string;
   statusId: number;
-  statusName: string;
-  statusRgb: string;
+  statusName: string | null;
+  statusRgb: string | undefined;
   priorityId: number;
   priorityName: string;
   serviceId: number;
@@ -71,7 +74,7 @@ export type ApplicationInfoType = {
   initiatorId: number;
   initiatorName: string;
   executorId: number | null;
-  executorName: string;
+  executorName: string | null;
   executorGroupId: number;
   executorGroupName: string;
   lifetimeItems: [
@@ -101,6 +104,7 @@ export type ExecutorsType = {
 export type InitialStateType = {
   applications: ApplicationType[];
   isAddNewApplicationFormVisible: boolean;
+  isEditApplicationFormVisible: boolean;
   newApplicationName: string;
   newApplicationDescription: string;
   applicationInfo: ApplicationInfoType;
@@ -111,6 +115,7 @@ export type InitialStateType = {
 const initialState: InitialStateType = {
   applications: [],
   isAddNewApplicationFormVisible: false,
+  isEditApplicationFormVisible: false,
   newApplicationName: '',
   newApplicationDescription: '',
   applicationInfo: {
@@ -174,6 +179,11 @@ export const applicationsReducer = (
         ...state,
         isAddNewApplicationFormVisible: action.isVisible,
       };
+    case 'SET-EDIT-APPLICATION-VISIBLE':
+      return {
+        ...state,
+        isEditApplicationFormVisible: action.isVisible,
+      };
     case 'SET-NEW-APPLICATION-NAME':
       return {
         ...state,
@@ -211,7 +221,9 @@ export const applicationsReducer = (
         ...state,
         applications: [
           ...state.applications.map(item =>
-            item.id === action.id ? { ...item, statusRgb: action.color } : item,
+            item.id === action.id
+              ? { ...item, statusRgb: action.color, statusName: action.name }
+              : item,
           ),
         ],
       };
@@ -219,6 +231,24 @@ export const applicationsReducer = (
       return {
         ...state,
         executors: [...action.executors],
+      };
+    case 'CHANGE-EXECUTOR':
+      return {
+        ...state,
+        applications: [
+          ...state.applications.map(item =>
+            item.id === action.id ? { ...item, executorName: action.executor } : item,
+          ),
+        ],
+      };
+    case 'CHANGE-EXECUTOR-EDIT':
+      return {
+        ...state,
+        applicationInfo: {
+          ...state.applicationInfo,
+          executorName: action.executor,
+          executorId: action.id,
+        },
       };
     default:
       return state;
@@ -240,6 +270,16 @@ export type SetAddNewApplicationVisibleACType = ReturnType<
 export const setAddNewApplicationVisibleAC = (isVisible: boolean) =>
   ({
     type: 'SET-APPLICATION-VISIBLE',
+    isVisible,
+  } as const);
+
+export type SetEditApplicationVisibleACType = ReturnType<
+  typeof setEditApplicationVisibleAC
+>;
+
+export const setEditApplicationVisibleAC = (isVisible: boolean) =>
+  ({
+    type: 'SET-EDIT-APPLICATION-VISIBLE',
     isVisible,
   } as const);
 
@@ -304,25 +344,20 @@ export const updateApplicationStatusAC = (statusID: number, id: number) =>
     id,
   } as const);
 
-export type UpdateExecutorACType = ReturnType<typeof updateExecutorAC>;
-
-export const updateExecutorAC = (statusId: number, executorId: number, id: number) =>
-  ({
-    type: 'UPDATE-EXECUTOR',
-    statusId,
-    executorId,
-    id,
-  } as const);
-
 export type UpdateApplicationColorStatusACType = ReturnType<
   typeof updateApplicationColorStatusAC
 >;
 
-export const updateApplicationColorStatusAC = (color: string, id: number | null) =>
+export const updateApplicationColorStatusAC = (
+  color: string | undefined,
+  id: number | null,
+  name: string | null,
+) =>
   ({
     type: 'UPDATE-APPLICATION-COLOR-STATUS',
     color,
     id,
+    name,
   } as const);
 
 export type GetExecutorsACType = ReturnType<typeof getExecutorsAC>;
@@ -331,6 +366,24 @@ export const getExecutorsAC = (executors: ExecutorsType[]) =>
   ({
     type: 'GET-EXECUTORS',
     executors,
+  } as const);
+
+export type ChangeExecutorACType = ReturnType<typeof changeExecutorAC>;
+
+export const changeExecutorAC = (executor: string | null, id: number | null) =>
+  ({
+    type: 'CHANGE-EXECUTOR',
+    executor,
+    id,
+  } as const);
+
+export type ChangeExecutorEditPageACType = ReturnType<typeof changeExecutorEditPageAC>;
+
+export const changeExecutorEditPageAC = (executor: string | null, id: number | null) =>
+  ({
+    type: 'CHANGE-EXECUTOR-EDIT',
+    executor,
+    id,
   } as const);
 
 export const getApplicationsTC = () => (dispatch: Dispatch) => {
@@ -346,18 +399,6 @@ export const getApplicationsTC = () => (dispatch: Dispatch) => {
     });
 };
 
-export const addNewApplicationTC =
-  (newApplicationData: NewApplicationDataType) => (dispatch: Dispatch) => {
-    applicationsAPI
-      .createNewApplication(newApplicationData)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
 export const getApplicationInfoTC = (id: string) => (dispatch: Dispatch) => {
   applicationsAPI
     .getApplicationInfo(id)
@@ -370,6 +411,23 @@ export const getApplicationInfoTC = (id: string) => (dispatch: Dispatch) => {
     });
 };
 
+export const addNewApplicationTC =
+  (newApplicationData: NewApplicationDataType) =>
+  (dispatch: ThunkDispatch<ActionsTypes, any, ActionsTypes>) => {
+    applicationsAPI
+      .createNewApplication(newApplicationData)
+      .then(res => {
+        console.log(res);
+        dispatch(getApplicationInfoTC(res.data.toString()));
+        dispatch(setAddNewApplicationVisibleAC(false));
+        dispatch(setEditApplicationVisibleAC(true));
+        dispatch(getApplicationsTC());
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
 export const getStatusesTC = () => (dispatch: Dispatch) => {
   applicationsAPI.getStatuses().then(res => {
     dispatch(getStatusAC(res.data));
@@ -378,12 +436,20 @@ export const getStatusesTC = () => (dispatch: Dispatch) => {
 };
 
 export const changeApplicationStatusTC =
-  (id: number | null, statusId: number, executorId: number | null, comment?: string) =>
+  (
+    id: number | null,
+    statusId: number,
+    executorId: number | null,
+    statusColor: string,
+    statusName: string,
+  ) =>
   (dispatch: Dispatch) => {
     applicationsAPI
       .updateStatus(id, statusId, executorId)
       .then(res => {
         console.log(res);
+        dispatch(setStatusAC(statusId, statusColor, statusName, id, executorId));
+        dispatch(updateApplicationColorStatusAC(statusColor, id, statusName));
       })
       .catch(err => {
         console.log(err);
@@ -401,3 +467,18 @@ export const getExecutorsTC = () => (dispatch: Dispatch) => {
       console.log(err);
     });
 };
+
+export const changeExecutorTC =
+  (
+    id: number | null,
+    statusId: number | null,
+    executorId: number | null,
+    executorName: string | null,
+  ) =>
+  (dispatch: Dispatch) => {
+    applicationsAPI.updateStatus(id, statusId, executorId).then(res => {
+      dispatch(changeExecutorAC(executorName, id));
+      dispatch(changeExecutorEditPageAC(executorName, id));
+      console.log(res);
+    });
+  };

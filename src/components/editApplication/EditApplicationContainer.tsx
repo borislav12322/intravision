@@ -5,10 +5,10 @@ import { AppRootStateType } from '../../redux/store';
 import {
   ApplicationInfoType,
   changeApplicationStatusTC,
+  changeExecutorTC,
   ExecutorsType,
-  setStatusAC,
+  setEditApplicationVisibleAC,
   StatusesType,
-  updateApplicationColorStatusAC,
 } from '../../redux/applications-reducer';
 
 const EditApplicationContainer = (): ReactElement => {
@@ -31,6 +31,9 @@ const EditApplicationContainer = (): ReactElement => {
   const changeExecutorListVisible = (isVisible: boolean): void => {
     setExecutorListVisible(isVisible);
   };
+  const closeEditForm = (): void => {
+    dispatch(setEditApplicationVisibleAC(false));
+  };
   const changeStatus = (
     newStatusID: number,
     statusColor: string,
@@ -38,16 +41,19 @@ const EditApplicationContainer = (): ReactElement => {
     id: number | null,
     executorID: number | null,
   ): void => {
-    dispatch(setStatusAC(newStatusID, statusColor, statusName, id, executorID));
-    dispatch(changeApplicationStatusTC(id, newStatusID, executorID));
-    dispatch(updateApplicationColorStatusAC(statusColor, id));
+    dispatch(
+      changeApplicationStatusTC(id, newStatusID, executorID, statusColor, statusName),
+    );
   };
 
   const changeExecutor = (
     id: number | null,
-    statusId: number,
+    statusId: number | null,
     executorId: number | null,
-  ): void => {};
+    name: string | null,
+  ): void => {
+    dispatch(changeExecutorTC(id, statusId, executorId, name));
+  };
 
   return (
     <EditApplication
@@ -60,6 +66,7 @@ const EditApplicationContainer = (): ReactElement => {
       isExecutorListVisible={isExecutorListVisible}
       changeExecutorListVisible={changeExecutorListVisible}
       executors={executors}
+      closeEditForm={closeEditForm}
     />
   );
 };

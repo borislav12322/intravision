@@ -8,6 +8,7 @@ import {
   getExecutorsTC,
   getStatusesTC,
   setAddNewApplicationVisibleAC,
+  setEditApplicationVisibleAC,
 } from '../../redux/applications-reducer';
 import { AppRootStateType } from '../../redux/store';
 
@@ -19,11 +20,17 @@ const ApplicationPageContainer = (): ReactElement => {
   const isAddFormVisible = useSelector<AppRootStateType, boolean>(
     state => state.applicationsReducer.isAddNewApplicationFormVisible,
   );
+  const isEditFormVisible = useSelector<AppRootStateType, boolean>(
+    state => state.applicationsReducer.isEditApplicationFormVisible,
+  );
   const openAddNewApplicationForm = (): void => {
     dispatch(setAddNewApplicationVisibleAC(true));
+    dispatch(setEditApplicationVisibleAC(false));
   };
   const openApplicationEditInfo = (id: string): void => {
     dispatch(getApplicationInfoTC(id));
+    dispatch(setEditApplicationVisibleAC(true));
+    dispatch(setAddNewApplicationVisibleAC(false));
   };
 
   useEffect(() => {
@@ -39,6 +46,7 @@ const ApplicationPageContainer = (): ReactElement => {
       isAddFormVisible={isAddFormVisible}
       openAddNewApplicationForm={openAddNewApplicationForm}
       openApplicationEditInfo={openApplicationEditInfo}
+      isEditFormVisible={isEditFormVisible}
     />
   );
 };

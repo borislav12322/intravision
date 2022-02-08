@@ -7,6 +7,7 @@ import EditApplicationContainer from '../../components/editApplication/EditAppli
 type PropsType = {
   applications: ApplicationType[];
   isAddFormVisible: boolean;
+  isEditFormVisible: boolean;
   openAddNewApplicationForm: () => void;
   openApplicationEditInfo: (id: string) => void;
 };
@@ -16,6 +17,7 @@ const ApplicationPage = ({
   isAddFormVisible,
   openAddNewApplicationForm,
   openApplicationEditInfo,
+  isEditFormVisible,
 }: PropsType): ReactElement => (
   <div className={s.applicationsContainer}>
     <button
@@ -66,7 +68,7 @@ const ApplicationPage = ({
         })}
     </ul>
     {isAddFormVisible && <NewApplicationFormContainer />}
-    <EditApplicationContainer />
+    {isEditFormVisible && <EditApplicationContainer />}
   </div>
 );
 

@@ -15,6 +15,7 @@ type PropsType = {
   executors: ExecutorsType[];
   changeStatusListVisible: (isVisible: boolean) => void;
   changeExecutorListVisible: (isVisible: boolean) => void;
+  closeEditForm: () => void;
   isStatusListVisible: boolean;
   isExecutorListVisible: boolean;
   changeStatus: (
@@ -26,8 +27,9 @@ type PropsType = {
   ) => void;
   changeExecutor: (
     id: number | null,
-    statusId: number,
+    statusId: number | null,
     executorId: number | null,
+    name: string | null,
   ) => void;
 };
 
@@ -41,6 +43,7 @@ const EditApplication = ({
   isExecutorListVisible,
   changeExecutorListVisible,
   executors,
+  closeEditForm,
 }: PropsType): ReactElement => (
   <div className="applicationFormContainer">
     <div className="header" style={{ marginBottom: '0px' }}>
@@ -48,7 +51,7 @@ const EditApplication = ({
         <span className={s.id}>№ {applicationInfo && applicationInfo.id}</span>
         <h2 className={s.title}>{applicationInfo && applicationInfo.name}</h2>
       </div>
-      <button type="button" className="btnClose">
+      <button type="button" className="btnClose" onClick={closeEditForm}>
         <img src={CloseBtnIcon} alt="close" />
       </button>
     </div>
@@ -150,7 +153,13 @@ const EditApplication = ({
             <ul className={s.executorsList}>
               {executors.map(item => {
                 const onClickHandle = (): void => {
-                  console.log(item.name);
+                  changeExecutorListVisible(false);
+                  changeExecutor(
+                    applicationInfo && applicationInfo.id,
+                    applicationInfo && applicationInfo.statusId,
+                    item.id,
+                    item.name,
+                  );
                 };
                 return (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
