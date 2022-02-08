@@ -3,6 +3,7 @@ import ApplicationPage from './ApplicationPage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApplicationType,
+  changeActiveItemAC,
   getApplicationInfoTC,
   getApplicationsTC,
   getExecutorsTC,
@@ -31,6 +32,7 @@ const ApplicationPageContainer = (): ReactElement => {
     dispatch(getApplicationInfoTC(id));
     dispatch(setEditApplicationVisibleAC(true));
     dispatch(setAddNewApplicationVisibleAC(false));
+    dispatch(changeActiveItemAC(id));
   };
 
   useEffect(() => {
@@ -39,7 +41,8 @@ const ApplicationPageContainer = (): ReactElement => {
   useEffect(() => {
     dispatch(getStatusesTC());
     dispatch(getExecutorsTC());
-  }, [dispatch]);
+    console.log(applications);
+  }, [dispatch, applications]);
   return (
     <ApplicationPage
       applications={applications}

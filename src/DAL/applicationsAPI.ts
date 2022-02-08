@@ -21,11 +21,27 @@ export const applicationsAPI = {
     axiosInstance.get('/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Statuses'),
   getExecutors: () =>
     axiosInstance.get('/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Users'),
-  updateStatus: (id: number | null, statusId: number | null, executorId: number | null) =>
+  updateApplicationInfo: (
+    id: number | null,
+    statusId: number | null,
+    executorId: number | null,
+  ) =>
     axiosInstance.put(`/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks/`, {
       id,
       statusId,
       executorId,
+    }),
+  addComment: (
+    id: number | null,
+    statusId: number | null,
+    executorId: number | null,
+    comment: string | null,
+  ) =>
+    axiosInstance.put(`/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks/`, {
+      id,
+      statusId,
+      executorId,
+      comment,
     }),
 };
 

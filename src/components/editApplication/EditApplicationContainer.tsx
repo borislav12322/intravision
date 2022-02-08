@@ -1,8 +1,9 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useState } from 'react';
 import EditApplication from './EditApplication';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootStateType } from '../../redux/store';
 import {
+  addCommentTC,
   ApplicationInfoType,
   changeApplicationStatusTC,
   changeExecutorTC,
@@ -14,7 +15,9 @@ import {
 const EditApplicationContainer = (): ReactElement => {
   const [isStatusListVisible, setStatusListVisible] = useState<boolean>(false);
   const [isExecutorListVisible, setExecutorListVisible] = useState<boolean>(false);
+  const [commentText, setCommentText] = useState<string>('');
   const dispatch = useDispatch();
+  const zeroLength = 0;
 
   const applicationInfo = useSelector<AppRootStateType, ApplicationInfoType | null>(
     state => state.applicationsReducer.applicationInfo,
@@ -33,6 +36,19 @@ const EditApplicationContainer = (): ReactElement => {
   };
   const closeEditForm = (): void => {
     dispatch(setEditApplicationVisibleAC(false));
+  };
+  const commentAreaHandle = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    setCommentText(e.currentTarget.value);
+  };
+  const addComment = (
+    id: number | null,
+    statusId: number | null,
+    executorId: number | null,
+  ): void => {
+    if (commentText.length !== zeroLength) {
+      dispatch(addCommentTC(id, statusId, executorId, commentText));
+      setCommentText('');
+    }
   };
   const changeStatus = (
     newStatusID: number,
@@ -67,6 +83,9 @@ const EditApplicationContainer = (): ReactElement => {
       changeExecutorListVisible={changeExecutorListVisible}
       executors={executors}
       closeEditForm={closeEditForm}
+      commentAreaHandle={commentAreaHandle}
+      addComment={addComment}
+      commentText={commentText}
     />
   );
 };

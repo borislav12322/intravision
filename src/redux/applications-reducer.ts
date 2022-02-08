@@ -15,7 +15,8 @@ export type ActionsTypes =
   | GetExecutorsACType
   | ChangeExecutorACType
   | ChangeExecutorEditPageACType
-  | SetEditApplicationVisibleACType;
+  | SetEditApplicationVisibleACType
+  | ChangeActiveItemACType;
 
 export type ApplicationType = {
   id: number;
@@ -46,6 +47,7 @@ export type ApplicationType = {
       name: string;
     },
   ];
+  itemClassname: string | null;
 };
 
 export type ApplicationInfoType = {
@@ -250,6 +252,17 @@ export const applicationsReducer = (
           executorId: action.id,
         },
       };
+    case 'CHANGE-ACTIVE-ITEM':
+      return {
+        ...state,
+        applications: [
+          ...state.applications.map(item =>
+            item.id.toString() === action.id
+              ? { ...item, itemClassname: 'activeAppItem' }
+              : { ...item, itemClassname: '' },
+          ),
+        ],
+      };
     default:
       return state;
   }
@@ -261,6 +274,14 @@ export const getApplicationsAC = (applications: ApplicationType[]) =>
   ({
     type: 'GET-APPLICATION',
     applications,
+  } as const);
+
+export type ChangeActiveItemACType = ReturnType<typeof changeActiveItemAC>;
+
+export const changeActiveItemAC = (id: string | null) =>
+  ({
+    type: 'CHANGE-ACTIVE-ITEM',
+    id,
   } as const);
 
 export type SetAddNewApplicationVisibleACType = ReturnType<
@@ -445,7 +466,7 @@ export const changeApplicationStatusTC =
   ) =>
   (dispatch: Dispatch) => {
     applicationsAPI
-      .updateStatus(id, statusId, executorId)
+      .updateApplicationInfo(id, statusId, executorId)
       .then(res => {
         console.log(res);
         dispatch(setStatusAC(statusId, statusColor, statusName, id, executorId));
@@ -476,9 +497,30 @@ export const changeExecutorTC =
     executorName: string | null,
   ) =>
   (dispatch: Dispatch) => {
-    applicationsAPI.updateStatus(id, statusId, executorId).then(res => {
+    applicationsAPI.updateApplicationInfo(id, statusId, executorId).then(res => {
       dispatch(changeExecutorAC(executorName, id));
       dispatch(changeExecutorEditPageAC(executorName, id));
       console.log(res);
     });
+  };
+
+export const addCommentTC =
+  (
+    id: number | null,
+    statusId: number | null,
+    executorId: number | null,
+    comment: string | null,
+  ) =>
+  (dispatch: ThunkDispatch<ActionsTypes, any, ActionsTypes>) => {
+    applicationsAPI
+      .addComment(id, statusId, executorId, comment)
+      .then(res => {
+        if (id) {
+          dispatch(getApplicationInfoTC(id.toString()));
+        }
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };

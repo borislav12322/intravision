@@ -41,7 +41,11 @@ const ApplicationPage = ({
           };
           return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
-            <li className={s.tableListItem} key={item.id} onClick={onClickHandle}>
+            <li
+              className={`${s.tableListItem} ${item.itemClassname}`}
+              key={item.id}
+              onClick={onClickHandle}
+            >
               <div className={`${s.itemID} ${s.listItem}`}>
                 {item.id}
                 <span

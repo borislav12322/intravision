@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ChangeEvent, ReactElement } from 'react';
 import s from './editApplication.module.css';
 import CloseBtnIcon from '../../assets/images/closeBtn.png';
 
@@ -15,6 +15,7 @@ type PropsType = {
   executors: ExecutorsType[];
   changeStatusListVisible: (isVisible: boolean) => void;
   changeExecutorListVisible: (isVisible: boolean) => void;
+  commentAreaHandle: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   closeEditForm: () => void;
   isStatusListVisible: boolean;
   isExecutorListVisible: boolean;
@@ -31,6 +32,12 @@ type PropsType = {
     executorId: number | null,
     name: string | null,
   ) => void;
+  addComment: (
+    id: number | null,
+    statusId: number | null,
+    executorId: number | null,
+  ) => void;
+  commentText: string;
 };
 
 const EditApplication = ({
@@ -44,6 +51,9 @@ const EditApplication = ({
   changeExecutorListVisible,
   executors,
   closeEditForm,
+  commentAreaHandle,
+  addComment,
+  commentText,
 }: PropsType): ReactElement => (
   <div className="applicationFormContainer">
     <div className="header" style={{ marginBottom: '0px' }}>
@@ -60,8 +70,24 @@ const EditApplication = ({
         <h3 className={s.subTitle}>Описание</h3>
         <p className={s.description}>{applicationInfo && applicationInfo.description}</p>
         <h3 className={s.subTitle}>Добавление коментариев</h3>
-        <textarea name="comments" id="comments" className={s.textarea} />
-        <button type="button" className={`${s.sendBtn} btn`}>
+        <textarea
+          name="comments"
+          id="comments"
+          className={s.textarea}
+          onChange={commentAreaHandle}
+          value={commentText}
+        />
+        <button
+          type="button"
+          className={`${s.sendBtn} btn`}
+          onClick={() => {
+            addComment(
+              applicationInfo && applicationInfo.id,
+              applicationInfo && applicationInfo.statusId,
+              applicationInfo && applicationInfo.executorId,
+            );
+          }}
+        >
           Сохранить
         </button>
         {applicationInfo &&

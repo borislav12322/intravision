@@ -44,8 +44,9 @@
     transition: all .3s ease;
 }
 
+
 .tableListItem:not(:first-child):hover{
-    background-color: rgba(0, 140, 240, 0.25);
+    background-color: rgba(108, 0, 240, 0.13);
     transition: all .3s ease;
 }
 .tableListItem:not(:first-child){
