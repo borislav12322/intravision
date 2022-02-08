@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useCallback, useEffect } from 'react';
 import ApplicationPage from './ApplicationPage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,6 +8,7 @@ import {
   getApplicationsTC,
   getExecutorsTC,
   getStatusesTC,
+  InitialStateType,
   setAddNewApplicationVisibleAC,
   setEditApplicationVisibleAC,
 } from '../../redux/applications-reducer';
@@ -18,38 +19,38 @@ const ApplicationPageContainer = (): ReactElement => {
   const applications = useSelector<AppRootStateType, ApplicationType[]>(
     state => state.applicationsReducer.applications,
   );
-  const isAddFormVisible = useSelector<AppRootStateType, boolean>(
-    state => state.applicationsReducer.isAddNewApplicationFormVisible,
-  );
-  const isEditFormVisible = useSelector<AppRootStateType, boolean>(
-    state => state.applicationsReducer.isEditApplicationFormVisible,
-  );
-  const openAddNewApplicationForm = (): void => {
+
+  const { isAddNewApplicationFormVisible, isEditApplicationFormVisible } = useSelector<
+    AppRootStateType,
+    InitialStateType
+  >(state => state.applicationsReducer);
+
+  const openAddNewApplicationForm = useCallback((): void => {
     dispatch(setAddNewApplicationVisibleAC(true));
     dispatch(setEditApplicationVisibleAC(false));
-  };
-  const openApplicationEditInfo = (id: string): void => {
-    dispatch(getApplicationInfoTC(id));
-    dispatch(setEditApplicationVisibleAC(true));
-    dispatch(setAddNewApplicationVisibleAC(false));
-    dispatch(changeActiveItemAC(id));
-  };
+  }, [dispatch]);
+  const openApplicationEditInfo = useCallback(
+    (id: string): void => {
+      dispatch(getApplicationInfoTC(id));
+      dispatch(setEditApplicationVisibleAC(true));
+      dispatch(setAddNewApplicationVisibleAC(false));
+      dispatch(changeActiveItemAC(id));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     dispatch(getApplicationsTC());
-  }, [dispatch]);
-  useEffect(() => {
     dispatch(getStatusesTC());
     dispatch(getExecutorsTC());
-    console.log(applications);
-  }, [dispatch, applications]);
+  }, [dispatch]);
   return (
     <ApplicationPage
       applications={applications}
-      isAddFormVisible={isAddFormVisible}
+      isAddFormVisible={isAddNewApplicationFormVisible}
       openAddNewApplicationForm={openAddNewApplicationForm}
       openApplicationEditInfo={openApplicationEditInfo}
-      isEditFormVisible={isEditFormVisible}
+      isEditFormVisible={isEditApplicationFormVisible}
     />
   );
 };

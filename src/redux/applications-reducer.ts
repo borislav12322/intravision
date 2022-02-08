@@ -263,6 +263,7 @@ export const applicationsReducer = (
           ),
         ],
       };
+
     default:
       return state;
   }

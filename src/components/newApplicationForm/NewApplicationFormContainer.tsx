@@ -1,8 +1,9 @@
-import React, { ChangeEvent, FormEvent, ReactElement } from 'react';
+import React, { ChangeEvent, FormEvent, ReactElement, useCallback } from 'react';
 import NewApplicationForm from './NewApplicationForm';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addNewApplicationTC,
+  InitialStateType,
   setAddNewApplicationVisibleAC,
   setNewApplicationDescriptionAC,
   setNewApplicationNameAC,
@@ -11,21 +12,28 @@ import { AppRootStateType } from '../../redux/store';
 
 const NewApplicationFormContainer = (): ReactElement => {
   const dispatch = useDispatch();
-  const newApplicationName = useSelector<AppRootStateType, string>(
-    state => state.applicationsReducer.newApplicationName,
-  );
-  const newApplicationDescription = useSelector<AppRootStateType, string>(
-    state => state.applicationsReducer.newApplicationDescription,
-  );
-  const closeAddNewApplicationForm = (): void => {
+  const defaultTag = 103877;
+
+  const { newApplicationName, newApplicationDescription } = useSelector<
+    AppRootStateType,
+    InitialStateType
+  >(state => state.applicationsReducer);
+
+  const closeAddNewApplicationForm = useCallback((): void => {
     dispatch(setAddNewApplicationVisibleAC(false));
-  };
-  const setNewApplicationName = (e: ChangeEvent<HTMLTextAreaElement>): void => {
-    dispatch(setNewApplicationNameAC(e.currentTarget.value));
-  };
-  const setNewApplicationDescription = (e: ChangeEvent<HTMLTextAreaElement>): void => {
-    dispatch(setNewApplicationDescriptionAC(e.currentTarget.value));
-  };
+  }, [dispatch]);
+  const setNewApplicationName = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>): void => {
+      dispatch(setNewApplicationNameAC(e.currentTarget.value));
+    },
+    [dispatch],
+  );
+  const setNewApplicationDescription = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>): void => {
+      dispatch(setNewApplicationDescriptionAC(e.currentTarget.value));
+    },
+    [dispatch],
+  );
   const newApplicationBody = {
     name: newApplicationName,
     description: newApplicationDescription,
@@ -36,20 +44,21 @@ const NewApplicationFormContainer = (): ReactElement => {
     priorityId: 103877,
     serviceId: 70326,
     resolutionDatePlan: '2022-02-06T16:20:00.057Z',
-    tags: [+'103877'],
+    tags: [defaultTag],
     initiatorId: 70327,
     executorId: 70327,
     executorGroupId: 70328,
   };
-  const onSubmitHandle = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    dispatch(addNewApplicationTC(newApplicationBody));
-    console.log(newApplicationName);
-    console.log(newApplicationDescription);
-    dispatch(setNewApplicationNameAC(''));
-    dispatch(setNewApplicationDescriptionAC(''));
-    e.currentTarget.reset();
-  };
+  const onSubmitHandle = useCallback(
+    (e: FormEvent<HTMLFormElement>): void => {
+      e.preventDefault();
+      dispatch(addNewApplicationTC(newApplicationBody));
+      dispatch(setNewApplicationNameAC(''));
+      dispatch(setNewApplicationDescriptionAC(''));
+      e.currentTarget.reset();
+    },
+    [newApplicationBody, dispatch],
+  );
 
   return (
     <NewApplicationForm
