@@ -22,7 +22,7 @@ ul {
 
 .btn {
     width: 180px;
-    height: 40px;
+    min-height: 40px;
     border-radius: 20px;
     background-color: #008cf0;
     border: none;
@@ -54,6 +54,7 @@ ul {
     width: 975px;
     padding-top: 65px;
     height: 100%;
+    overflow-y: auto;
 }
 
 .btnClose {

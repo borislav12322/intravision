@@ -5,6 +5,8 @@ import {
   ApplicationType,
   getApplicationInfoTC,
   getApplicationsTC,
+  getExecutorsTC,
+  getStatusesTC,
   setAddNewApplicationVisibleAC,
 } from '../../redux/applications-reducer';
 import { AppRootStateType } from '../../redux/store';
@@ -26,6 +28,10 @@ const ApplicationPageContainer = (): ReactElement => {
 
   useEffect(() => {
     dispatch(getApplicationsTC());
+  }, [dispatch]);
+  useEffect(() => {
+    dispatch(getStatusesTC());
+    dispatch(getExecutorsTC());
   }, [dispatch]);
   return (
     <ApplicationPage
