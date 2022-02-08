@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/intravision/static/css/main.49fc308c.css",
+    "main.js": "/intravision/static/js/main.a92ea128.js",
+    "static/js/787.e4b851bd.chunk.js": "/intravision/static/js/787.e4b851bd.chunk.js",
+    "static/media/logo.svg": "/intravision/static/media/logo.d0ad5812069b36370a404227021704a7.svg",
+    "index.html": "/intravision/index.html",
+    "main.49fc308c.css.map": "/intravision/static/css/main.49fc308c.css.map",
+    "main.a92ea128.js.map": "/intravision/static/js/main.a92ea128.js.map",
+    "787.e4b851bd.chunk.js.map": "/intravision/static/js/787.e4b851bd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.49fc308c.css",
+    "static/js/main.a92ea128.js"
+  ]
+}
