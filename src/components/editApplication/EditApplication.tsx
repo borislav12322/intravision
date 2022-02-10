@@ -120,10 +120,17 @@ const EditApplication = React.memo(
                 <h4 className={s.nameTitle}>{item.userName}</h4>
                 <div className={s.commentDateBox}>
                   <span className={s.dateInfo} style={{ marginRight: '5px' }}>
-                    {new Date(item.createdAt).toLocaleDateString('ru')},
+                    {new Date(item.createdAt).toLocaleDateString('ru', {
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                    ,
                   </span>
                   <span className={s.dateInfo} style={{ marginRight: '5px' }}>
-                    {new Date(item.createdAt).toLocaleTimeString('ru')}
+                    {new Date(item.createdAt).toLocaleTimeString('ru', {
+                      hour: 'numeric',
+                      minute: 'numeric',
+                    })}
                   </span>
                   <span className={s.dateInfo}>прокомментировал</span>
                 </div>
