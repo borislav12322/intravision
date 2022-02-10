@@ -17,7 +17,19 @@ export type ActionsTypes =
   | ChangeExecutorEditPageACType
   | SetEditApplicationVisibleACType
   | ChangeActiveItemACType
-  | SetIsLoadingACType;
+  | SetIsLoadingACType
+  | DivideNumberIDACType;
+
+export type LifeTimeItemType = {
+  id: number;
+  userName: string;
+  lifetimeType: number;
+  createdAt: string;
+  comment: string;
+  fieldName: null | string;
+  oldFieldValue: null | string;
+  newFieldValue: null | string;
+};
 
 export type ApplicationType = {
   id: number;
@@ -80,18 +92,7 @@ export type ApplicationInfoType = {
   executorName: string | null;
   executorGroupId: number;
   executorGroupName: string;
-  lifetimeItems: [
-    {
-      id: number;
-      userName: string;
-      lifetimeType: number;
-      createdAt: string;
-      comment: string;
-      fieldName: null | string;
-      oldFieldValue: null | string;
-      newFieldValue: null | string;
-    },
-  ];
+  lifetimeItems: LifeTimeItemType[];
 };
 
 export type StatusesType = {
@@ -114,6 +115,8 @@ export type InitialStateType = {
   statuses: StatusesType[];
   executors: ExecutorsType[];
   isLoading: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  dividedNumberID: string | null | 0;
 };
 
 const initialState: InitialStateType = {
@@ -167,6 +170,7 @@ const initialState: InitialStateType = {
   statuses: [],
   executors: [],
   isLoading: false,
+  dividedNumberID: '',
 };
 
 export const applicationsReducer = (
@@ -271,6 +275,12 @@ export const applicationsReducer = (
         ...state,
         isLoading: action.isLoading,
       };
+    case 'DIVIDE-NUMBER-ID': {
+      return {
+        ...state,
+        dividedNumberID: action.numberID && action.numberID.toLocaleString('ru'),
+      };
+    }
     default:
       return state;
   }
@@ -415,6 +425,14 @@ export const changeExecutorEditPageAC = (executor: string | null, id: number | n
     id,
   } as const);
 
+export type DivideNumberIDACType = ReturnType<typeof divideNumberIDAC>;
+
+export const divideNumberIDAC = (numberID: number | null) =>
+  ({
+    type: 'DIVIDE-NUMBER-ID',
+    numberID,
+  } as const);
+
 export type SetIsLoadingACType = ReturnType<typeof setIsLoadingAC>;
 
 export const setIsLoadingAC = (isLoading: boolean) =>
@@ -501,8 +519,8 @@ export const changeExecutorTC =
   ) =>
   (dispatch: Dispatch) => {
     applicationsAPI.updateApplicationInfo(id, statusId, executorId).then(res => {
-      dispatch(changeExecutorAC(executorName, id));
-      dispatch(changeExecutorEditPageAC(executorName, id));
+      dispatch(changeExecutorAC(executorName, executorId));
+      dispatch(changeExecutorEditPageAC(executorName, executorId));
     });
   };
 

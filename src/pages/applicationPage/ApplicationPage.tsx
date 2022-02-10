@@ -48,7 +48,7 @@ const ApplicationPage = React.memo(
                 onClick={onClickHandle}
               >
                 <div className={`${s.itemID} ${s.listItem}`}>
-                  {item.id}
+                  {item.id.toLocaleString('ru')}
                   <span
                     className={s.colorStatus}
                     style={{ backgroundColor: item.statusRgb }}
@@ -58,14 +58,14 @@ const ApplicationPage = React.memo(
                   <p className={s.applicationText}>{item.name}</p>
                 </div>
                 <div className={`${s.itemStatus} ${s.listItem}`}>
-                  <span
+                  <pre
                     className={s.statusText}
                     style={{
                       backgroundColor: item.statusRgb,
                     }}
                   >
                     {item.statusName}
-                  </span>
+                  </pre>
                 </div>
                 <div className={`${s.itemExecutor} ${s.listItem}`}>
                   {item.executorName}

@@ -17,6 +17,8 @@ const App = (): ReactElement => (
       <InputSearchContainer />
       <div className="mainContent">
         <Routes>
+          <Route path="/" element={<ApplicationPageContainer />} />
+          <Route path="/intravision" element={<ApplicationPageContainer />} />
           <Route path="/dataBase" element={<DataBase />} />
           <Route path="/applications" element={<ApplicationPageContainer />} />
           <Route path="/employers" element={<Employers />} />

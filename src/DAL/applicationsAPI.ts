@@ -5,28 +5,22 @@ const axiosInstance = axios.create({
   baseURL: 'http://intravision-task.test01.intravision.ru/',
 });
 
+const tenantKey = '7bd558ea-771d-4b99-a2d3-55151d5388ac';
+
 export const applicationsAPI = {
   getApplications: () =>
-    axiosInstance.get<ApplicationResponseType>(
-      'odata/tasks?tenantguid=7bd558ea-771d-4b99-a2d3-55151d5388ac',
-    ),
+    axiosInstance.get<ApplicationResponseType>(`odata/tasks?tenantguid=${tenantKey}`),
   createNewApplication: (newApplicationData: NewApplicationDataType) =>
-    axiosInstance.post(
-      'api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks',
-      newApplicationData,
-    ),
-  getApplicationInfo: (id: string) =>
-    axiosInstance.get(`/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks/${id}`),
-  getStatuses: () =>
-    axiosInstance.get('/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Statuses'),
-  getExecutors: () =>
-    axiosInstance.get('/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Users'),
+    axiosInstance.post(`api/${tenantKey}/Tasks`, newApplicationData),
+  getApplicationInfo: (id: string) => axiosInstance.get(`/api/${tenantKey}/Tasks/${id}`),
+  getStatuses: () => axiosInstance.get(`/api/${tenantKey}/Statuses`),
+  getExecutors: () => axiosInstance.get(`/api/${tenantKey}/Users`),
   updateApplicationInfo: (
     id: number | null,
     statusId: number | null,
     executorId: number | null,
   ) =>
-    axiosInstance.put(`/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks/`, {
+    axiosInstance.put(`/api/${tenantKey}/Tasks/`, {
       id,
       statusId,
       executorId,
@@ -37,7 +31,7 @@ export const applicationsAPI = {
     executorId: number | null,
     comment: string | null,
   ) =>
-    axiosInstance.put(`/api/7bd558ea-771d-4b99-a2d3-55151d5388ac/Tasks/`, {
+    axiosInstance.put(`/api/${tenantKey}/Tasks/`, {
       id,
       statusId,
       executorId,

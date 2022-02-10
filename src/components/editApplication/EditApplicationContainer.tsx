@@ -26,6 +26,10 @@ const EditApplicationContainer = (): ReactElement => {
   const createdAt = createdAtDateTime.toLocaleDateString('ru');
   const resolutionDatePlan = new Date(applicationInfo.resolutionDatePlan);
   const resolutionDatePlanValue = `${resolutionDatePlan.toLocaleDateString('ru')} г.`;
+  const filteredComments = applicationInfo.lifetimeItems.filter(
+    item => item.comment !== null || '',
+  );
+  const idNumberDivided = applicationInfo.id && applicationInfo.id.toLocaleString('ru');
 
   const changeStatusListVisible = useCallback(
     (isVisible: boolean): void => {
@@ -82,7 +86,6 @@ const EditApplicationContainer = (): ReactElement => {
     },
     [dispatch],
   );
-
   return (
     <EditApplication
       applicationInfo={applicationInfo}
@@ -101,6 +104,8 @@ const EditApplicationContainer = (): ReactElement => {
       isLoading={isLoading}
       createdAt={createdAt}
       resolutionDatePlanValue={resolutionDatePlanValue}
+      filteredComments={filteredComments}
+      idNumberDivided={idNumberDivided}
     />
   );
 };

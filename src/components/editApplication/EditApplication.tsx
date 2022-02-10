@@ -6,6 +6,7 @@ import CommentCircle from '../../assets/images/commenctCircle.png';
 import {
   ApplicationInfoType,
   ExecutorsType,
+  LifeTimeItemType,
   StatusesType,
 } from '../../redux/applications-reducer';
 import LoadingComponent from '../loadingComponent/LoadingComponent';
@@ -42,6 +43,9 @@ type PropsType = {
   commentText: string;
   createdAt: string;
   resolutionDatePlanValue: string;
+  filteredComments: LifeTimeItemType[];
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  idNumberDivided: string | null | 0;
 };
 
 const EditApplication = React.memo(
@@ -62,12 +66,14 @@ const EditApplication = React.memo(
     isLoading,
     createdAt,
     resolutionDatePlanValue,
+    filteredComments,
+    idNumberDivided,
   }: PropsType): ReactElement => (
     <div className="applicationFormContainer">
       {isLoading && <LoadingComponent />}
       <div className="header" style={{ marginBottom: '0px' }}>
         <div className={s.textContent}>
-          <span className={s.id}>№ {applicationInfo && applicationInfo.id}</span>
+          <span className={s.id}>№ {idNumberDivided}</span>
           <h2 className={s.title}>{applicationInfo && applicationInfo.name}</h2>
         </div>
         <button
@@ -107,36 +113,35 @@ const EditApplication = React.memo(
           >
             Сохранить
           </button>
-          {applicationInfo &&
-            applicationInfo.lifetimeItems.map(item => (
-              <div className={s.commentsContent} key={item.id}>
-                <img src={CommentCircle} className={s.commentCircle} alt="circle" />
-                <div className={s.commentMainContent}>
-                  <h4 className={s.nameTitle}>{item.userName}</h4>
-                  <div className={s.commentDateBox}>
-                    <span className={s.dateInfo} style={{ marginRight: '5px' }}>
-                      {new Date(item.createdAt).toLocaleDateString('ru')},
-                    </span>
-                    <span className={s.dateInfo} style={{ marginRight: '5px' }}>
-                      {new Date(item.createdAt).toLocaleTimeString('ru')}
-                    </span>
-                    <span className={s.dateInfo}>прокомментировал</span>
-                  </div>
-                  <p className={s.commentDescription}>{item.comment}</p>
+          {filteredComments.map(item => (
+            <div className={s.commentsContent} key={item.id}>
+              <img src={CommentCircle} className={s.commentCircle} alt="circle" />
+              <div className={s.commentMainContent}>
+                <h4 className={s.nameTitle}>{item.userName}</h4>
+                <div className={s.commentDateBox}>
+                  <span className={s.dateInfo} style={{ marginRight: '5px' }}>
+                    {new Date(item.createdAt).toLocaleDateString('ru')},
+                  </span>
+                  <span className={s.dateInfo} style={{ marginRight: '5px' }}>
+                    {new Date(item.createdAt).toLocaleTimeString('ru')}
+                  </span>
+                  <span className={s.dateInfo}>прокомментировал</span>
                 </div>
+                <p className={s.commentDescription}>{item.comment}</p>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
         <div className={s.executorInfo}>
           <div className={`${s.status} ${s.editableElement}`}>
-            {isStatusListVisible ? (
+            {isStatusListVisible && (
               <ul
                 className={s.changeStatusList}
                 onMouseLeave={() => {
                   changeStatusListVisible(false);
                 }}
               >
-                <li className={s.statusChange}>Выбор статуса</li>
+                <li className={s.statusChangeTitle}>Выбор статуса</li>
                 {statuses.map(item => {
                   const onClickHandle = (): void => {
                     changeStatusListVisible(false);
@@ -160,25 +165,24 @@ const EditApplication = React.memo(
                   );
                 })}
               </ul>
-            ) : (
-              <div className={s.statusBox}>
-                <span
-                  className={s.jobStatus}
-                  style={{
-                    backgroundColor: `${applicationInfo && applicationInfo.statusRgb}`,
-                  }}
-                />
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                <span
-                  className={s.statusText}
-                  onClick={() => {
-                    changeStatusListVisible(true);
-                  }}
-                >
-                  {applicationInfo && applicationInfo.statusName}
-                </span>
-              </div>
             )}
+            <div className={s.statusBox}>
+              <span
+                className={s.jobStatus}
+                style={{
+                  backgroundColor: `${applicationInfo && applicationInfo.statusRgb}`,
+                }}
+              />
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+              <span
+                className={s.statusText}
+                onClick={() => {
+                  changeStatusListVisible(true);
+                }}
+              >
+                {applicationInfo && applicationInfo.statusName}
+              </span>
+            </div>
           </div>
           <div className={s.executorInfoContent} style={{ marginBottom: '56px' }}>
             <h5 className={s.executorInfoTitle}>Заявитель</h5>
